@@ -5,46 +5,36 @@
 #include "include/Menu.hpp"
 
 Menu::Menu(std::string& message, std::vector<std::string>& options) : message(message), options(options) {
-}
-
-Menu &Menu::init() {
-    std::cout << this->message << std::endl;
-    for(auto& option:this->options) {
-        option = "  " + option;
-    }
-    return *this;
+    initscr();
+    noecho();
+    curs_set(0);
+    start_color();
 }
 
 void Menu::prompt() {
-    std::string keyInput;
-    int order = 0;
-    // this->putVecToConsole(this->options, 0);
-    for(auto& elm:this->options) {
-        std::cout << elm << std::endl;
+    mvprintw(0,0,message.c_str());
+    for(auto&& [i,value]:enumrate(options)) {
+        mvprintw(i+1,2,value.c_str());
     }
-    while(1) {
-        std::cin >> keyInput;
-        auto vec = std::make_unique<std::vector<std::string>>();
-        std::copy(this->options.begin(), this->options.end(), std::back_inserter(*vec.get()));
-        if(keyInput == "s" && order != static_cast<int>((options.size()-1))) {
-            order+=1;
-            this->putVecToConsole(*vec.get(), order);
+    int cursor = 1;
+    init_pair(1, COLOR_CYAN, COLOR_BLACK);
+    while(true) {
+        attron(COLOR_PAIR(1));
+        mvprintw(cursor,1,">");
+        attroff(COLOR_PAIR(1));
+        int ch = getch();
+        if(ch=='s' && cursor < 5) {
+            mvprintw(cursor,1," ");
+            cursor+=1;
+        }
+        if(ch=='w' && cursor > 1) {
+            mvprintw(cursor,1," ");
+            cursor-=1;
+        }
+        if(ch=='q' || (cursor==5&&ch==10)) {
+            goto QUIT;
         }
     }
-}
-
-inline void Menu::putVecToConsole(std::vector<std::string> &vec, int order) {
-    for(int i = 1; i < 6; i++) {
-        std::cout << "\r" << "\x1b[K" << std::endl;
-    }
-    int i = 0;
-    for(auto& elm:vec) {
-        if(i==order) {
-            elm.replace(0,1,">");
-            std::cout << "\u001b[35m" << elm << "\u001b[0m" << std::endl;
-        } else {
-            std::cout << elm << std::endl;
-        }
-        i++;
-    }
+    QUIT:
+    endwin();
 }
