@@ -23,15 +23,15 @@ void Menu::prompt() {
         mvprintw(cursor,1,">");
         attroff(COLOR_PAIR(1));
         int ch = getch();
-        if(ch=='s' && cursor < 5) {
+        if(ch=='s' && cursor < static_cast<int>(OPTIONS::QUIT)) {
             mvprintw(cursor,1," ");
             cursor+=1;
         }
-        if(ch=='w' && cursor > 1) {
+        if(ch=='w' && cursor >static_cast<int>(OPTIONS::LAUNCH)) {
             mvprintw(cursor,1," ");
             cursor-=1;
         }
-        if(ch=='q' || (cursor==5&&ch==10)) {
+        if(ch=='q') {
             goto QUIT;
         }
     }

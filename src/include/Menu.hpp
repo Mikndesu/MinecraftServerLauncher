@@ -21,4 +21,11 @@ private:
         }
         return enumrate;
     }
+    enum class OPTIONS {
+        LAUNCH=1,
+        CREATE,
+        EDIT,
+        SHOW,
+        QUIT
+    };
 };
