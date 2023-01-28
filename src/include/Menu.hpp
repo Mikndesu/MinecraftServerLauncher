@@ -5,11 +5,12 @@
 #include <vector>
 #include <tuple>
 #include <map>
+#include <ncurses.h>
 #include "include/OptionsEnum.hpp"
 
+template <typename E> 
 class Menu {
 private:
-    using Option = Options::OptionsEnum;
     std::string const message;
     std::vector<std::string> options;
     inline std::vector<std::tuple<int, std::string>> enumrate(std::vector<std::string> vec) {
@@ -22,6 +23,22 @@ private:
         return enumrate;
     }
 public:
-    Menu(std::string&, std::vector<std::string>&);
-    Option prompt();
+    Menu(std::string& message, std::vector<std::string>& options) : message(message), options(options) {
+        initscr();
+        noecho();
+        curs_set(0);
+        start_color();
+    }
+    Menu& prompt() {
+        mvprintw(0,0,message.c_str());
+        for(auto&& [i,value]:enumrate(options)) {
+            mvprintw(i+1,2,value.c_str());
+        }
+        return *this;
+    }
+    template <typename Func>
+    E start(Func func) {
+        return func();
+    }
+
 };
