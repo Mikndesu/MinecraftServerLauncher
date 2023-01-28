@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 #include <tuple>
+#include <map>
+#include "include/OptionsEnum.hpp"
 
 class Menu {
-public:
-    Menu(std::string&, std::vector<std::string>&);
-    void prompt();
 private:
+    using Option = Options::OptionsEnum;
     std::string const message;
     std::vector<std::string> options;
     inline std::vector<std::tuple<int, std::string>> enumrate(std::vector<std::string> vec) {
@@ -21,11 +21,7 @@ private:
         }
         return enumrate;
     }
-    enum class OPTIONS {
-        LAUNCH=1,
-        CREATE,
-        EDIT,
-        SHOW,
-        QUIT
-    };
+public:
+    Menu(std::string&, std::vector<std::string>&);
+    Option prompt();
 };
