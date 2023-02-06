@@ -8,7 +8,6 @@
 #include <ncurses.h>
 #include "include/OptionsEnum.hpp"
 
-template <typename E> 
 class Menu {
 private:
     std::string const message;
@@ -36,9 +35,9 @@ public:
         }
         return *this;
     }
-    template <typename Func>
-    E start(Func func) {
-        return func();
+    template <typename Func, typename T>
+    void start(Func&& func, T t) {
+        func(t);
     }
 
 };
