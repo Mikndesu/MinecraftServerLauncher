@@ -14,15 +14,21 @@ MainMenu& MainMenu::start() {
         attron(COLOR_PAIR(1));
         mvprintw(cursor, 1, ">");
         attroff(COLOR_PAIR(1));
-        mvprintw(10, 1, options.at(cursor-1).c_str());
+        mvprintw(10, 1, options.at(cursor - 1).c_str());
         int ch = getch();
-        if (ch == 's' && cursor < LAST_CURSOR) {
-            mvprintw(cursor, 1, " ");
-            cursor += 1;
+        if(ch == 's') {
+            if(cursor < LAST_CURSOR) {
+                cursor += 1;
+            } else if(cursor == LAST_CURSOR) {
+                cursor = FIRST_CURSOR;
+            }
         }
-        if (ch == 'w' && cursor > FIRST_CURSOR) {
-            mvprintw(cursor, 1, " ");
-            cursor -= 1;
+        if (ch == 'w') {
+            if (cursor > FIRST_CURSOR) {
+                cursor -= 1;
+            } else if (cursor == FIRST_CURSOR) {
+                cursor = LAST_CURSOR;
+            }
         }
         if (ch == 10 || ch == 13) {
             if (cursor == LAST_CURSOR) {
